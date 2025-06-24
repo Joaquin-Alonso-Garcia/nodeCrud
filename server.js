@@ -14,8 +14,6 @@ let students = [
   {id: 3, name: 'Lorna Dane', email: 'lornadane@idukay.com', isEligible: true},
 ];
 
-app.use(express.json());
-
 app.get('/parents', (req, res) => {
   try {
     res.status(200).json({
