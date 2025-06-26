@@ -4,11 +4,23 @@
   "description": "api exercise",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*.js",
+    "serve": "nodemon src/server.js"
   },
   "author": "joaquin",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongodb": "^6.17.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/eslint-parser": "^7.27.5",
+    "@babel/preset-env": "^7.27.2",
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "globals": "^16.2.0",
+    "nodemon": "^3.1.10"
   }
 }
