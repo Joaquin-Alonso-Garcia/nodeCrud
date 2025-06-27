@@ -11,8 +11,10 @@
   "author": "joaquin",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.6.0",
     "express": "^5.1.0",
-    "mongodb": "^6.17.0"
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",

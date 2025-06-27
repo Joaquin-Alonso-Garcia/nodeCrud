@@ -1,8 +1,10 @@
 const express = require('express');
+const connectDB = require('./db/mongodb.js');
+
 const app = express();
 const PORT = 3000;
-const parentsRouter = require('./routes/parents');
-const studentsRouter = require('./routes/students');
+const parentsModule = require('./modules/parents/module.js');
+const studentsModule = require('./modules/students/module.js');
 
 app.get('/', (req, res) => {
   res.json({
@@ -14,15 +16,18 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/parents', parentsRouter);
-app.use('/students', studentsRouter);
+app.use(express.json());
+parentsModule(app);
+studentsModule(app);
 
-app.use((res) => {
+app.use((req, res) => {
   res.status(404).send({
     success: false,
     message: 'Route not found'
   });
 });
+
+connectDB();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
