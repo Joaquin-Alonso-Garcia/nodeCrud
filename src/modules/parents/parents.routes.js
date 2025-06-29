@@ -6,6 +6,8 @@ module.exports = (app) => {
 
   instanceRoutes.setup({
     get: true,
-    post: true
+    post: true,
+    put: true,
+    delete: true
   });
 };

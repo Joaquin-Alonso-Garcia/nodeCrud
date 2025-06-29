@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const model = require('../core/model.js');
 
 const parentsSchema = new mongoose.Schema({
-  name: {type: String},
-  email: {type: String},
-  isEligible: {type: Boolean}
+  name: {type: String, required: true},
+  email: {type: String, required: true, unique: true},
+  isEligible: {type: Boolean, default: false}
 }, {collection: 'parents'});
 
 const mongooseModel = mongoose.model('parents', parentsSchema);
