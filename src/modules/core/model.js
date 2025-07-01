@@ -1,17 +1,33 @@
-module.exports = (mongooseModel) => {
+const validators = require('./validators.js');
+
+module.exports = (mongooseModel, moduleValidator) => {
+  const instanceValidator = validators(moduleValidator);
+
   return {
-    get: async () => {
-      const result = await mongooseModel.find({});
+    get: async (req) => {
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 10;
+      const skip = (page - 1) * limit;
+      const result = await mongooseModel.find({}).skip(skip).limit(limit);
+
+      const totalDocuments = await mongooseModel.countDocuments();
+      const totalPages = Math.ceil(totalDocuments / limit);
+
+      return {
+        result,
+        pagination: {page, limit},
+        totalDocuments,
+        totalPages
+      };
+    },
+    post: async (body) => {
+      instanceValidator(body);
+      const result = await mongooseModel.create(body);
 
       return result;
     },
-    post: async (data) => {
-      const result = await mongooseModel.create(data);
-
-      return result;
-    },
-    put: async (data) => {
-      const {_id, ...update} = data;
+    put: async (body) => {
+      const {_id, ...update} = body;
 
       if (!_id) {
         throw new Error('Missing _id for update');
@@ -21,8 +37,8 @@ module.exports = (mongooseModel) => {
 
       return result;
     },
-    delete: async (data) => {
-      const {_id} = data;
+    delete: async (body) => {
+      const {_id} = body;
 
       if (!_id) {
         throw new Error('Missing _id for delete');

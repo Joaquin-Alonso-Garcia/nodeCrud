@@ -1,10 +1,10 @@
 const express = require('express');
 const connectDB = require('./db/mongodb.js');
+const parentsModule = require('./modules/parents/module.js');
+const studentsModule = require('./modules/students/module.js');
 
 const app = express();
 const PORT = 3000;
-const parentsModule = require('./modules/parents/module.js');
-const studentsModule = require('./modules/students/module.js');
 
 app.get('/', (req, res) => {
   res.json({

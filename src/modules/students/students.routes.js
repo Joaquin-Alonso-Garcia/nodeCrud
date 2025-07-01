@@ -2,7 +2,7 @@ const routes = require('../core/routes.js');
 const studentsModel = require('./students.model.js');
 
 module.exports = (app) => {
-  const instanceRoutes = routes(app, '/students', studentsModel, 'student');
+  const instanceRoutes = routes(app, '/students', studentsModel);
 
   instanceRoutes.setup({
     get: true,

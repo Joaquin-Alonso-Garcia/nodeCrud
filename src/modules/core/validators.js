@@ -1,6 +1,6 @@
 module.exports = (moduleValidator) => {
   if (!moduleValidator) {
-    throw new Error('Debe tener un modulo de validadores');
+    throw new Error('It should have a validator module');
   }
 
   return (body) => {
