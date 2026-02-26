@@ -1,20 +1,17 @@
 const parentsModel = require('./parents.model.js');
 
 const validator = () => ({
-  maxLength: (expectedLength) => (value, field) => {
+  required: () => (value, field) => {
     if (!value) {
-      throw new Error(`This ${field} is required`);
+      throw new Error(`${field} is required`);
     }
-
+  },
+  maxLength: (expectedLength) => (value, field) => {
     if (value.length > expectedLength) {
       throw new Error(`The ${field} must not have more than ${expectedLength} characters`);
     }
   },
   emailUnique: () => async (value, field) => {
-    if (!value) {
-      throw new Error(`The ${field} is required`);
-    }
-
     const existingMail = await parentsModel.findOne({email: value});
 
     if (existingMail) {
@@ -31,6 +28,6 @@ const validator = () => ({
 });
 
 module.exports = {
-  name: [validator().maxLength(10)],
-  email: [validator().emailUnique, validator().emailFormat()]
+  name: [validator().required(), validator().maxLength(10)],
+  email: [validator().required(), validator().emailUnique, validator().emailFormat()]
 };

@@ -1,9 +1,8 @@
-function sendSuccess(res, data, status = 200, count = null, message = null) {
+function sendSuccess(res, data, status = 200) {
   res.status(status).json({
     success: true,
     data,
-    count,
-    message
+    status
   });
 }
 

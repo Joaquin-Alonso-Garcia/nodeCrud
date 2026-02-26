@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const model = require('../core/model.js');
-const studentsValidator = {};
+const studentsValidator = require('./students.validators.js');
 
 const studentsSchema = new mongoose.Schema({
   name: {type: String},

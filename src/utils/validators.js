@@ -1,0 +1,28 @@
+module.exports = (model) => {
+  return {
+    required: () => (value, field) => {
+      if (!value) {
+        throw new Error(`This ${field} is required`);
+      }
+    },
+    maxLength: (expectedLength) => (value, field) => {
+      if (value.length > expectedLength) {
+        throw new Error(`The ${field} must not have more than ${expectedLength} characters`);
+      }
+    },
+    emailUnique: () => async (value, field) => {
+      const existingMail = await model.findOne({email: value});
+
+      if (existingMail) {
+        throw new Error(`The ${field} must be unique`);
+      }
+    },
+    emailFormat: () => (value, field) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailRegex.test(value)) {
+        throw new Error(` The ${field} must be a valid email address`);
+      }
+    }
+  };
+};

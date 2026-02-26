@@ -1,7 +1,7 @@
 const services = require('./services.js');
 
-module.exports = (app, path, model) => {
-  const instanceService = services(path, model);
+module.exports = (app, path, model, permissions) => {
+  const instanceService = services(path, model, permissions);
 
   return {
     setup: (methods) => {

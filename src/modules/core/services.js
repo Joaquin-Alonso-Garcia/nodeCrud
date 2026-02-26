@@ -1,13 +1,33 @@
 const {sendSuccess, sendError} = require('../../utils/response.js');
+const permissions = require('./permissions.js');
 
-module.exports = (path, model) => {
+module.exports = (path, model, modulePermissions) => {
+  const instancePermissions = permissions(modulePermissions);
+
   return {
     get: async (req, res) => {
       try {
-        const data = await model.get(req);
-        const count = data.length;
+        const query = {...req.query};
+        const page = parseInt(query.page, 10) || 1;
+        const limit = parseInt(query.limit, 10) || 10;
+        const skip = (page - 1) * limit;
 
-        sendSuccess(res, data, 200, count);
+        if (!query.select) {
+          instancePermissions('get', []);
+          const result = await model.get(query, {skip, limit, page});
+
+          return sendSuccess(res, result, 200);
+        }
+
+        const selectArray = query.select.split(/\s+/) || '';
+        const select = instancePermissions('get', selectArray);
+        delete query.page;
+        delete query.limit;
+        delete query.select;
+
+        const result = await model.get(query, {skip, limit, page, select});
+
+        sendSuccess(res, result, 200);
       } catch (error) {
         const responseText = `Server error occurred while fetching ${path}: ${error}`;
 
@@ -16,6 +36,8 @@ module.exports = (path, model) => {
     },
     post: async (req, res) => {
       try {
+        const reqBody = Object.keys(req.body);
+        instancePermissions('post', reqBody);
         const data = await model.post(req.body);
         const responseText = `New ${path} created successfully`;
 
@@ -38,6 +60,8 @@ module.exports = (path, model) => {
     },
     put: async (req, res) => {
       try {
+        const reqBody = Object.keys(req.body);
+        instancePermissions('put', reqBody);
         const data = await model.put(req.body);
         const responseText = `${path} updated successfully`;
 
@@ -50,6 +74,8 @@ module.exports = (path, model) => {
     },
     delete: async (req, res) => {
       try {
+        const reqBody = Object.keys(req.body);
+        instancePermissions('delete', reqBody);
         const data = await model.delete(req.body);
         const responseText = `${path} deleted successfully`;
 

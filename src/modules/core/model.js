@@ -4,12 +4,11 @@ module.exports = (mongooseModel, moduleValidator) => {
   const instanceValidator = validators(moduleValidator);
 
   return {
-    get: async (req) => {
-      const page = parseInt(req.query.page, 10) || 1;
-      const limit = parseInt(req.query.limit, 10) || 10;
-      const skip = (page - 1) * limit;
-      const result = await mongooseModel.find({}).skip(skip).limit(limit);
-
+    get: async (filters, {skip, limit, select, page}) => {
+      const result = await mongooseModel.find()
+      .skip(skip)
+      .limit(limit)
+      .select(select);
       const totalDocuments = await mongooseModel.countDocuments();
       const totalPages = Math.ceil(totalDocuments / limit);
 

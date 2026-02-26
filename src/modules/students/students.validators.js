@@ -1,36 +1,38 @@
+const validators = require('../../utils/validators.js');
 const studentsModel = require('./students.model.js');
-
-const validator = () => ({
-  maxLength: (expectedLength) => (value, field) => {
-    if (!value) {
-      throw new Error(`This ${field} is required`);
-    }
-
-    if (value.length > expectedLength) {
-      throw new Error(`The ${field} must not have more than ${expectedLength} characters`);
-    }
-  },
-  emailUnique: () => async (value, field) => {
-    if (!value) {
-      throw new Error(`The ${field} is required`);
-    }
-
-    const existingMail = await studentsModel.findOne({email: value});
-
-    if (existingMail) {
-      throw new Error(`The ${field} must be unique`);
-    }
-  },
-  emailFormat: () => (value, field) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(value)) {
-      throw new Error(` The ${field} must be a valid email address`);
-    }
-  }
-});
+const instaceValidators = validators(studentsModel);
 
 module.exports = {
-  name: [validator().maxLength(10)],
-  email: [validator().emailUnique, validator().emailFormat()]
+  name: [instaceValidators.required, ]
 };
+// const validator = () => ({
+//   required: () => (value, field) => {
+//     if (!value) {
+//       throw new Error(`This ${field} is required`);
+//     }
+//   },
+//   maxLength: (expectedLength) => (value, field) => {
+//     if (value.length > expectedLength) {
+//       throw new Error(`The ${field} must not have more than ${expectedLength} characters`);
+//     }
+//   },
+//   emailUnique: () => async (value, field) => {
+//     const existingMail = await studentsModel.findOne({email: value});
+
+//     if (existingMail) {
+//       throw new Error(`The ${field} must be unique`);
+//     }
+//   },
+//   emailFormat: () => (value, field) => {
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+//     if (!emailRegex.test(value)) {
+//       throw new Error(` The ${field} must be a valid email address`);
+//     }
+//   }
+// });
+
+// module.exports = {
+//   name: [validator().required, validator().maxLength(10)],
+//   email: [validator().required, validator().emailUnique, validator().emailFormat()]
+// };
